@@ -1,488 +1,423 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELIX RP — Официальный сайт MTA сервера</title>
+    <title>RELIX RP — Скоро Открытие | MTA RolePlay</title>
     
     <!-- Иконка на вкладке браузера (Favicon) -->
     <link rel="icon" type="image/png" href="logo.png?v=2">
     <link rel="shortcut icon" type="image/png" href="logo.png?v=2">
     <link rel="apple-touch-icon" href="logo.png?v=2">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        relix: {
+                            purple: '#a855f7',
+                            cyan: '#06b6d4',
+                            pink: '#ec4899',
+                            dark: '#06060c',
+                            card: '#0d0d17',
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'float': 'float 4s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { filter: 'drop-shadow(0 0 15px rgba(168, 85, 247, 0.4))' },
+                            '100%': { filter: 'drop-shadow(0 0 35px rgba(6, 182, 212, 0.7))' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary: #8a2be2;
-            --primary-glow: #a855f7;
-            --accent: #00f2fe;
-            --bg-dark: #0a0813;
-            --bg-card: rgba(20, 16, 35, 0.65);
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
         html {
             scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
+            background-color: #06060c;
+            color: #f3f4f6;
             overflow-x: hidden;
-            position: relative;
         }
 
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+        /* Фоновые неоновые пятна */
+        .glow-bg-1 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
             pointer-events: none;
         }
 
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 8%;
-            background: rgba(10, 8, 19, 0.75);
-            backdrop-filter: blur(12px);
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            color: #fff;
-            text-transform: uppercase;
-        }
-
-        .logo-img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            border-radius: 8px;
-            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.7));
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover .logo-img {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .logo span {
-            background: linear-gradient(135deg, #fff 30%, var(--primary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav {
-            display: flex;
-            gap: 30px;
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        nav a:hover {
-            color: #fff;
-        }
-
-        nav a::after {
-            content: '';
+        .glow-bg-2 {
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0%;
-            height: 2px;
-            background: var(--primary-glow);
-            transition: width 0.3s ease;
-            box-shadow: 0 0 8px var(--primary-glow);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(168, 85, 247, 0.1) 40%, rgba(0,0,0,0) 70%);
+            bottom: 10%;
+            right: -100px;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 120px 20px 60px;
+        /* Кнопка с эффектом глянца и свечения */
+        .glow-button {
             position: relative;
-        }
-
-        .hero-badge {
-            background: rgba(138, 43, 226, 0.15);
-            border: 1px solid rgba(168, 85, 247, 0.4);
-            color: var(--primary-glow);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
-        }
-
-        .hero h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4.8rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, #fff 20%, var(--primary-glow) 60%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
-        }
-
-        .hero p {
-            max-width: 650px;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 40px;
-        }
-
-        .btn-download {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            padding: 18px 42px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-            text-decoration: none;
-            background: linear-gradient(135deg, var(--primary), #5b21b6);
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            box-shadow: 0 10px 30px -5px rgba(138, 43, 226, 0.5);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.35), inset 0 0 10px rgba(255, 255, 255, 0.2);
             overflow: hidden;
         }
 
-        .btn-download:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px 0 rgba(168, 85, 247, 0.7);
-            background: linear-gradient(135deg, var(--primary-glow), var(--primary));
-        }
-
-        .btn-download:active {
-            transform: translateY(0);
-        }
-
-        .how-to-play {
-            padding: 100px 8%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
-            margin-bottom: 60px;
-            color: #fff;
-        }
-
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        .step-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 35px 25px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .step-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(168, 85, 247, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: rgba(138, 43, 226, 0.2);
-            color: var(--primary-glow);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            border: 1px solid rgba(168, 85, 247, 0.3);
-        }
-
-        .step-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-            color: #fff;
-        }
-
-        .step-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .modal-overlay {
-            position: fixed;
+        .glow-button::after {
+            content: '';
+            position: absolute;
             top: 0;
+            right: 0;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 3, 10, 0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: translateX(-100%);
+        }
+
+        .glow-button:hover::after {
+            animation: shimmer 1.5s infinite;
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* Эффект стекла (Glassmorphism) */
+        .glass-card {
+            background: rgba(13, 13, 23, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
         }
 
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
+        .glass-card:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.2);
         }
 
-        .modal {
-            background: #120e24;
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            padding: 40px 30px;
-            border-radius: 24px;
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(138, 43, 226, 0.2);
-            transform: scale(0.8);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-        }
-
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
-
-        .modal-icon {
-            font-size: 3rem;
-            color: var(--primary-glow);
-            margin-bottom: 20px;
-        }
-
-        .modal h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #fff;
-        }
-
-        .modal p {
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-        }
-
-        .modal-socials {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .social-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-btn:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-            border-color: var(--primary-glow);
-        }
-
-        .btn-close {
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
-            color: #fff;
-            padding: 12px 30px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s ease;
-        }
-
-        .btn-close:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            header {
-                padding: 15px 5%;
-            }
-            nav {
-                display: none;
-            }
+        /* Эффект модального окна */
+        .modal-backdrop {
+            background: rgba(4, 4, 8, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-relix-purple selection:text-white">
 
-    <canvas id="bg-canvas"></canvas>
+    <!-- Интерактивный canvas для частиц -->
+    <canvas id="particleCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="RELIX RP Logo" class="logo-img">
-            <span>RELIX RP</span>
-        </div>
-        <nav>
-            <a href="#hero">Главная</a>
-            <a href="#how-to-play">Как начать</a>
+    <!-- Фоновые неоновые пятна -->
+    <div class="glow-bg-1"></div>
+    <div class="glow-bg-2"></div>
+
+    <!-- Шапка / Навигация -->
+    <header class="relative z-20 container mx-auto px-6 py-6 flex justify-between items-center">
+        <a href="#" class="flex items-center space-x-3 group">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-relix-purple via-relix-cyan to-relix-pink p-[2px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform duration-300">
+                <div class="w-full h-full bg-relix-dark rounded-[10px] flex items-center justify-center overflow-hidden">
+                    <img src="logo.png" alt="Logo" class="w-full h-full object-cover">
+                </div>
+            </div>
+            <span class="font-display font-black text-2xl tracking-wider text-white">
+                RELIX<span class="text-transparent bg-clip-text bg-gradient-to-r from-relix-purple to-relix-cyan">RP</span>
+            </span>
+        </a>
+        
+        <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
+            <a href="#how-to-play" class="hover:text-relix-cyan transition-colors py-1">Как начать</a>
+            <a href="#about" class="hover:text-relix-cyan transition-colors py-1">О проекте</a>
+            <a href="#socials" class="hover:text-relix-cyan transition-colors py-1">Сообщество</a>
         </nav>
+
+        <a href="https://discord.gg" target="_blank" class="glass-card px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-200 hover:text-white flex items-center gap-2.5 hover:border-relix-purple/60 transition-all shadow-sm">
+            <i class="fab fa-discord text-relix-purple text-base"></i>
+            <span>Discord</span>
+        </a>
     </header>
 
-    <section class="hero" id="hero">
-        <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Открытие совсем скоро</div>
-        <h1>ДОБРО ПОЖАЛОВАТЬ НА<br><span>RELIX ROLEPLAY</span></h1>
-        <p>Погрузись в уникальную атмосферу MTA с продуманной экономикой, кастомным автопарком и крутым комьюнити.</p>
-        <button class="btn-download" id="downloadBtn">
-            <i class="fa-solid fa-download"></i> Скачать лаунчер
-        </button>
-    </section>
+    <!-- Главная секция (Hero Section) -->
+    <main class="relative z-10 container mx-auto px-6 pt-10 pb-20 flex-grow flex flex-col items-center justify-center text-center">
+        
+        <!-- Статус разработки -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-card mb-8 animate-float border border-relix-purple/30">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-relix-cyan opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-relix-cyan"></span>
+            </span>
+            <span class="text-xs font-bold uppercase tracking-widest text-gray-200">Финальная стадия разработки</span>
+        </div>
 
-    <section class="how-to-play" id="how-to-play">
-        <h2 class="section-title">КАК НАЧАТЬ ИГРАТЬ?</h2>
-        <div class="steps-grid">
-            <div class="step-card">
-                <div class="step-number">01</div>
-                <h3>Скачай лаунчер</h3>
-                <p>Нажми на кнопку «Скачать лаунчер» на главной странице и загрузи установочный файл.</p>
+        <!-- Главный заголовок с неоновым свечением -->
+        <h1 class="font-display font-black text-4xl sm:text-6xl md:text-7xl tracking-tight mb-6 max-w-5xl uppercase leading-tight">
+            Погрузись в атмосферу <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-relix-purple via-relix-cyan to-relix-pink animate-pulse-glow">
+                RELIX ROLEPLAY
+            </span>
+        </h1>
+
+        <!-- Подзаголовок -->
+        <p class="text-gray-300 text-lg sm:text-xl max-w-2xl mb-10 font-normal leading-relaxed">
+            Новый уровень MTA RolePlay. Продуманный лор, кастомные автомобили, развитая экономика и полная свобода действий для каждого игрока.
+        </p>
+
+        <!-- Кнопка вызова модального окна -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full justify-center max-w-md">
+            <button id="openModalBtn" 
+                    class="glow-button w-full sm:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-relix-purple to-relix-cyan text-white font-bold text-lg flex items-center justify-center gap-3 cursor-pointer group">
+                <i class="fas fa-download text-xl group-hover:translate-y-0.5 transition-transform"></i>
+                <span>Скачать Лаунчер</span>
+            </button>
+        </div>
+
+        <!-- Подпись под кнопкой -->
+        <p class="text-xs text-gray-500 mt-4 flex items-center gap-2">
+            <i class="fas fa-shield-halved text-emerald-400"></i> Официальный клиент • Без вирусов • Скоро старт
+        </p>
+
+        <!-- Блок "О проекте" -->
+        <section id="about" class="w-full max-w-5xl mt-24 pt-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl text-left">
+                    <div class="w-10 h-10 rounded-lg bg-relix-purple/20 text-relix-purple flex items-center justify-center mb-4 text-lg">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 text-white">Реалистичный автопарк</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Детализированные модели машин, физика управления и полный тюнинг под твой стиль.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-left">
+                    <div class="w-10 h-10 rounded-lg bg-relix-cyan/20 text-relix-cyan flex items-center justify-center mb-4 text-lg">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 text-white">Уникальные фракции</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Гос. структуры, криминальные группировки и частный бизнес. Выбирай свой путь.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-left">
+                    <div class="w-10 h-10 rounded-lg bg-relix-pink/20 text-relix-pink flex items-center justify-center mb-4 text-lg">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 text-white">Высокий FPS</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Оптимизированный код и маппинг гарантируют стабильную игру даже на слабых ПК.</p>
+                </div>
             </div>
-            <div class="step-card">
-                <div class="step-number">02</div>
-                <h3>Установи игру</h3>
-                <p>Запусти скачанный файл и следуй простым подсказкам мастера установки.</p>
+        </section>
+
+        <!-- Блок "Как начать играть" -->
+        <section id="how-to-play" class="w-full max-w-5xl mt-28 pt-8">
+            <h2 class="font-display font-bold text-2xl sm:text-4xl text-center mb-4 uppercase tracking-wide">
+                Как начать <span class="text-transparent bg-clip-text bg-gradient-to-r from-relix-cyan to-relix-purple">играть?</span>
+            </h2>
+            <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto mb-12">
+                Всего 3 простых шага отделяют тебя от игры на нашем сервере.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                <!-- Шаг 1 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="text-6xl font-display font-black text-white/5 absolute -right-2 -bottom-2 group-hover:text-relix-purple/10 transition-colors">01</div>
+                    <div class="w-12 h-12 rounded-xl bg-relix-purple/20 border border-relix-purple/40 flex items-center justify-center text-relix-purple text-xl font-bold mb-6">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">1. Установи GTA SA & MTA</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Для игры потребуется чистая GTA San Andreas и установленный клиент MTA SA (v1.6).
+                    </p>
+                </div>
+
+                <!-- Шаг 2 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="text-6xl font-display font-black text-white/5 absolute -right-2 -bottom-2 group-hover:text-relix-cyan/10 transition-colors">02</div>
+                    <div class="w-12 h-12 rounded-xl bg-relix-cyan/20 border border-relix-cyan/40 flex items-center justify-center text-relix-cyan text-xl font-bold mb-6">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">2. Скачай Лаунчер</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Скачай наш фирменный лаунчер RELIX RP для автоматической загрузки игровых файлов.
+                    </p>
+                </div>
+
+                <!-- Шаг 3 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="text-6xl font-display font-black text-white/5 absolute -right-2 -bottom-2 group-hover:text-relix-pink/10 transition-colors">03</div>
+                    <div class="w-12 h-12 rounded-xl bg-relix-pink/20 border border-relix-pink/40 flex items-center justify-center text-relix-pink text-xl font-bold mb-6">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">3. Подключись к серверу</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Запусти лаунчер, жми «Играть», создавай уникального персонажа и начинай игру!
+                    </p>
+                </div>
             </div>
-            <div class="step-card">
-                <div class="step-number">03</div>
-                <h3>Заходи на сервер</h3>
-                <p>Открывай лаунчер, создавай своего уникального персонажа и начинай свой путь!</p>
+        </section>
+
+    </main>
+
+    <!-- Подвал / Футер -->
+    <footer id="socials" class="relative z-10 border-t border-white/10 py-10 bg-black/60 backdrop-blur-md">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-3">
+                <span class="font-display font-bold text-lg tracking-wider text-white">
+                    RELIX<span class="text-relix-purple">RP</span>
+                </span>
+                <span class="text-gray-600">|</span>
+                <p class="text-gray-500 text-xs">
+                    © 2026 RELIX RP. Все права защищены.
+                </p>
+            </div>
+
+            <!-- Ссылки на соцсети -->
+            <div class="flex space-x-5 text-gray-400 text-xl">
+                <a href="https://t.me" target="_blank" class="hover:text-relix-cyan transition-colors p-2 glass-card rounded-xl">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="https://vk.com" target="_blank" class="hover:text-relix-purple transition-colors p-2 glass-card rounded-xl">
+                    <i class="fab fa-vk"></i>
+                </a>
+                <a href="https://discord.gg" target="_blank" class="hover:text-relix-pink transition-colors p-2 glass-card rounded-xl">
+                    <i class="fab fa-discord"></i>
+                </a>
             </div>
         </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2026 RELIX RP. Все права защищены. Сервер MTA SA.</p>
     </footer>
 
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <div class="modal-icon">
-                <i class="fa-solid fa-rocket"></i>
+    <!-- Модальное окно "Сервер в разработке" -->
+    <div id="modalBackdrop" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modalCard" class="glass-card max-w-lg w-full rounded-3xl p-8 relative transform scale-90 transition-transform duration-300 border border-relix-purple/40 shadow-2xl shadow-purple-900/40">
+            
+            <!-- Кнопка закрытия (Крестик) -->
+            <button id="closeModalCross" class="absolute top-6 right-6 text-gray-400 hover:text-white text-xl transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Иконка статуса -->
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-relix-purple to-relix-cyan p-0.5 mb-6 mx-auto">
+                <div class="w-full h-full bg-relix-dark rounded-[14px] flex items-center justify-center text-relix-cyan text-2xl">
+                    <i class="fas fa-rocket animate-bounce"></i>
+                </div>
             </div>
-            <h2>СЕРВЕР ГОТОВИТСЯ К СТАРТУ!</h2>
-            <p>Мы наводим финальный глянец и тестируем сборку. Лаунчер будет доступен для скачивания совсем скоро!</p>
-            <p style="font-size: 0.85rem; color: var(--primary-glow); margin-bottom: 15px;">Следи за анонсами в наших соцсетях:</p>
-            <div class="modal-socials">
-                <a href="#" class="social-btn" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-                <a href="#" class="social-btn" title="Discord"><i class="fa-brands fa-discord"></i></a>
-                <a href="#" class="social-btn" title="VK"><i class="fa-brands fa-vk"></i></a>
+
+            <!-- Заголовок -->
+            <h3 class="font-display font-extrabold text-2xl text-center text-white mb-3">
+                Сервер почти готов!
+            </h3>
+
+            <!-- Описание -->
+            <p class="text-gray-300 text-sm text-center leading-relaxed mb-6">
+                Мы наводим последние штрихи, тестируем системы и готовим лучшее обновление. Лаунчер станет доступен в день официального открытия проекта!
+            </p>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 text-center">
+                <span class="text-xs text-gray-400 uppercase tracking-widest block mb-2 font-semibold">Следи за датой старта</span>
+                <div class="flex justify-center gap-3">
+                    <a href="https://t.me" target="_blank" class="px-4 py-2 rounded-xl bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 text-xs font-bold transition-all flex items-center gap-2">
+                        <i class="fab fa-telegram"></i> Telegram
+                    </a>
+                    <a href="https://discord.gg" target="_blank" class="px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 text-xs font-bold transition-all flex items-center gap-2">
+                        <i class="fab fa-discord"></i> Discord
+                    </a>
+                    <a href="https://vk.com" target="_blank" class="px-4 py-2 rounded-xl bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 text-xs font-bold transition-all flex items-center gap-2">
+                        <i class="fab fa-vk"></i> ВКонтакте
+                    </a>
+                </div>
             </div>
-            <button class="btn-close" id="closeModal">Понял, жду!</button>
+
+            <!-- Кнопка закрытия -->
+            <button id="closeModalBtn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-relix-purple to-relix-cyan text-white font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-purple-500/25">
+                Понятно, буду ждать!
+            </button>
         </div>
     </div>
 
+    <!-- JS Логика -->
     <script>
-        const downloadBtn = document.getElementById('downloadBtn');
-        const modalOverlay = document.getElementById('modalOverlay');
-        const closeModal = document.getElementById('closeModal');
+        // Модальное окно
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const closeModalCross = document.getElementById('closeModalCross');
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const modalCard = document.getElementById('modalCard');
 
-        downloadBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            modalOverlay.classList.add('active');
-        });
+        function openModal() {
+            modalBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+            modalCard.classList.remove('scale-90');
+            modalCard.classList.add('scale-100');
+        }
 
-        closeModal.addEventListener('click', () => {
-            modalOverlay.classList.remove('active');
-        });
+        function closeModal() {
+            modalBackdrop.classList.add('opacity-0', 'pointer-events-none');
+            modalCard.classList.remove('scale-100');
+            modalCard.classList.add('scale-90');
+        }
 
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalOverlay.classList.remove('active');
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        closeModalCross.addEventListener('click', closeModal);
+
+        // Закрытие при клике мимо модалки
+        modalBackdrop.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop) {
+                closeModal();
             }
         });
 
-        const canvas = document.getElementById('bg-canvas');
+        // Плавный скролл для всех ссылок-якорей
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Анимация частиц на заднем фоне (Particle Engine)
+        const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
@@ -493,24 +428,26 @@
         window.addEventListener('resize', resizeCanvas);
 
         const particles = [];
-        const particleCount = 40;
+        const particleCount = 45;
 
         for (let i = 0; i < particleCount; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 2 + 1,
-                speedX: (Math.random() - 0.5) * 0.5,
-                speedY: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 0.5,
+                color: Math.random() > 0.5 ? '#a855f7' : '#06b6d4',
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
                 alpha: Math.random() * 0.5 + 0.2
             });
         }
 
-        function animate() {
+        function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             particles.forEach(p => {
-                p.x += p.speedX;
-                p.y += p.speedY;
+                p.x += p.vx;
+                p.y += p.vy;
 
                 if (p.x < 0) p.x = canvas.width;
                 if (p.x > canvas.width) p.x = 0;
@@ -519,14 +456,14 @@
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(168, 85, 247, ${p.alpha})`;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = '#a855f7';
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
                 ctx.fill();
             });
-            requestAnimationFrame(animate);
+
+            requestAnimationFrame(animateParticles);
         }
-        animate();
+        animateParticles();
     </script>
 </body>
 </html>
